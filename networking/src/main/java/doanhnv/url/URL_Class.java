@@ -1,8 +1,6 @@
 package doanhnv.url;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
 
 public class URL_Class {
@@ -101,6 +99,29 @@ public class URL_Class {
             }
             httpInputStreamReader.close();
             System.out.println(content1);
+        }
+    }
+
+    static class Test_WriteToAURL {
+        public static void main(String[] args) throws IOException {
+            URL createUserAPI = new URL("http://dummy.restapiexample.com/api/v1/create");
+
+            HttpURLConnection httpConnection = (HttpURLConnection) createUserAPI.openConnection();
+            httpConnection.setDoOutput(true);
+            httpConnection.setRequestMethod("POST");
+
+            BufferedOutputStream outputStream = new BufferedOutputStream(httpConnection.getOutputStream());
+            outputStream.write("{\"name\":\"test2\",\"salary\":\"123\",\"age\":\"23\"}".getBytes());
+            outputStream.flush();
+            outputStream.close();
+
+            BufferedReader response = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+            String responseContent = "";
+            String tmpContent = "";
+            while((tmpContent = response.readLine()) != null) {
+                responseContent+= tmpContent;
+            }
+            System.out.println(responseContent);
         }
     }
 }
