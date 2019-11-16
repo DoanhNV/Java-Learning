@@ -32,6 +32,7 @@ public class SocketServerHandler {
                         String response = "received: " + clientMessage  + "\n";
                         writer.write(response.getBytes());
                         writer.flush();
+                        System.out.println("Response to client success!");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

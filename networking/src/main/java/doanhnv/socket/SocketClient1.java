@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class SocketClient1 {
+    public static int responseStatus;
 
     public static void main(String[] args) throws IOException {
 
@@ -17,14 +18,20 @@ public class SocketClient1 {
                     try {
                         String serverResponse = null;
                         while (true) {
-                            serverResponse = reader.readLine();
-                            if (serverResponse == null) {
-                                System.out.println("Messgage from server is Null!");
-                                throw new SocketException("Disconect with server!");
+                            if (responseStatus == 1) {
+                                System.out.println("Thread responseStatus ======================================================= 1");
+                                serverResponse = reader.readLine();
+                                if (serverResponse == null) {
+                                    System.out.println("Messgage from server is Null!");
+                                    throw new SocketException("Disconect with server!");
+                                }
+                                System.out.println("Server response: " + serverResponse);
+                                responseStatus = 2;
                             }
-                            System.out.println("Server response: " + serverResponse);
+
+                            //System.out.print(""); - Magic line
                         }
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
                         try {
@@ -38,17 +45,22 @@ public class SocketClient1 {
             }).start();
 
             while (true) {
-                System.out.print("You: ");
-                String content = inputer.readLine();
-                writer.write(content);
-                writer.newLine();
-                writer.flush();
-
+                System.out.println("Main 2 responseStatus: " + responseStatus);
+                if (responseStatus == 0 || responseStatus == 2) {
+                    System.out.print("You: ");
+                    String content = inputer.readLine();
+                    writer.write(content);
+                    writer.newLine();
+                    writer.flush();
+                    responseStatus = 1;
+                    System.out.println("Main responseStatus: " + responseStatus);
+                }
 //                Test disConnect
 //                String myMessage = null;
 //                writer.write(myMessage);
 //                writer.newLine();
 //                writer.flush();
+                Thread.sleep(1000);
             }
         } catch (Exception e) {
             System.out.println("Socket is: " + client.isClosed());
