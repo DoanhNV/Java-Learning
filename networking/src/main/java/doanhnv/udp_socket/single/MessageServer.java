@@ -10,11 +10,12 @@ public class MessageServer {
 
         System.out.println("Ready for messaging at " + socket.getLocalPort());
         while (true) {
-            byte[] buffer = new byte[1024];
-            DatagramPacket receivePakage = new DatagramPacket(buffer, buffer.length);
-            socket.receive(receivePakage);
-            System.out.println(receivePakage.getAddress());
-            System.out.println("Client messsage: " + new String(receivePakage.getData()) + " from " + receivePakage.getAddress() + ":" + receivePakage.getPort());
+            byte[] buffer = new byte[2048];
+            DatagramPacket receivePackage = new DatagramPacket(buffer, buffer.length);
+            socket.receive(receivePackage);
+            System.out.println(receivePackage.getAddress());
+            String message = "Client messsage: " + new String(receivePackage.getData()).trim() + " from " + receivePackage.getAddress() + ":" + receivePackage.getPort();
+            System.out.println(message);
         }
     }
 }
